@@ -62,36 +62,39 @@ def adaptive_search(arr, key, threshold):
     n = len(arr)
 
     if n > threshold:
-        print("🔁 Using Optimal Search: Binary Search")
+        print("🔁 Dataset > 1000 → Using MOST OPTIMAL: Binary Search")
         return binary_search(arr, key, 0, n - 1)
     else:
-        print("🔁 Using Hybrid Search: Jump + Binary Search")
+        print("🔁 Dataset ≤ 1000 → Using Hybrid: Jump + Binary Search")
         return jump_binary_search(arr, key)
 
 
 # ---------------- MAIN PROGRAM ----------------
 if __name__ == "__main__":
-    SIZE = 30
-    THRESHOLD = 25
+
+    # Dynamic size input
+    SIZE = int(input("Enter number of elements to generate: "))
+    THRESHOLD = 1000
 
     # Generate random array
-    arr = [random.randint(1, 100) for _ in range(SIZE)]
-    print("Original Array:")
+    arr = [random.randint(1, 10000) for _ in range(SIZE)]
+
+    print("\n📌 Randomly Generated Array:")
     print(arr)
 
-    # Sort using merge sort
+    # Merge sort
     sorted_arr = merge_sort(arr)
-    print("\nSorted Array (Merge Sort):")
+
+    print("\n📌 Array After Merge Sort:")
     print(sorted_arr)
 
-    # Element to search
-    key = random.choice(sorted_arr)
-    print(f"\nSearching for element: {key}")
+    # User input for element to search
+    key = int(input("\n🔍 Enter the element to search: "))
 
-    # Perform adaptive search
+    # Adaptive search
     index = adaptive_search(sorted_arr, key, THRESHOLD)
 
     if index != -1:
-        print(f"✅ Element found at index {index}")
+        print(f"✅ Element {key} found at index {index}")
     else:
-        print("❌ Element not found")
+        print(f"❌ Element {key} not found in the array")
