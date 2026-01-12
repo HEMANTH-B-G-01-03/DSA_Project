@@ -107,3 +107,7 @@ if __name__ == "__main__":
         print("Jump + Binary Search: NOT FOUND")
 
     print(f"Jump + Binary Search Time: {time_hybrid:.8f} seconds")
+
+
+
+#jump +binary 
