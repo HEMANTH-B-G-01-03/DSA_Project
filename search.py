@@ -1,5 +1,6 @@
 import random
 import math
+import time
 
 # ---------------- MERGE SORT ----------------
 def merge_sort(arr):
@@ -30,7 +31,9 @@ def merge(left, right):
 
 
 # ---------------- BINARY SEARCH ----------------
-def binary_search(arr, key, low, high):
+def binary_search(arr, key):
+    low, high = 0, len(arr) - 1
+
     while low <= high:
         mid = (low + high) // 2
         if arr[mid] == key:
@@ -54,48 +57,53 @@ def jump_binary_search(arr, key):
         if prev >= n:
             return -1
 
-    return binary_search(arr, key, prev, min(step, n) - 1)
-
-
-# ---------------- ADAPTIVE SEARCH ----------------
-def adaptive_search(arr, key, threshold):
-    n = len(arr)
-
-    if n > threshold:
-        print("Dataset > 1000 → Using MOST OPTIMAL: Binary Search")
-        return binary_search(arr, key, 0, n - 1)
-    else:
-        print("Dataset ≤ 1000 → Using Hybrid: Jump + Binary Search")
-        return jump_binary_search(arr, key)
+    return binary_search(arr[prev:min(step, n)], key)
 
 
 # ---------------- MAIN PROGRAM ----------------
 if __name__ == "__main__":
 
-    # Dynamic size input
     SIZE = int(input("Enter number of elements to generate: "))
-    THRESHOLD = 1000
 
     # Generate random array
-    arr = [random.randint(1, 10000) for _ in range(SIZE)]
-
-    print("\n Randomly Generated Array:")
-    print(arr)
+    arr = [random.randint(1, 100000) for _ in range(SIZE)]
 
     # Merge sort
     sorted_arr = merge_sort(arr)
 
-    print("\n Array After Merge Sort:")
+    print("\nSorted Array:")
     print(sorted_arr)
 
-    # User input for element to search
-    key = int(input("\n Enter the element to search: "))
+    # Element to search
+    key = int(input("\nEnter the element to search: "))
 
-    # Adaptive search
-    index = adaptive_search(sorted_arr, key, THRESHOLD)
+    # -------- Binary Search Timing --------
+    start = time.perf_counter()
+    index_bs = binary_search(sorted_arr, key)
+    end = time.perf_counter()
+    time_bs = end - start
 
-    if index != -1:
-        print(f" Element {key} found at index {index}")
+    # -------- Jump + Binary Search Timing --------
+    start = time.perf_counter()
+    index_hybrid = jump_binary_search(sorted_arr, key)
+    end = time.perf_counter()
+    time_hybrid = end - start
+
+    # -------- Output --------
+    print("\n--- SEARCH RESULTS ---")
+
+    if index_bs != -1:
+        print(f"Binary Search: FOUND (Index = {index_bs})")
     else:
-        print(f" Element {key} not found in the array")
- 
+        print("Binary Search: NOT FOUND")
+
+    print(f"Binary Search Time: {time_bs:.8f} seconds")
+
+    print()
+
+    if index_hybrid != -1:
+        print("Jump + Binary Search: FOUND")
+    else:
+        print("Jump + Binary Search: NOT FOUND")
+
+    print(f"Jump + Binary Search Time: {time_hybrid:.8f} seconds")
