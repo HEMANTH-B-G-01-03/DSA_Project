@@ -125,7 +125,7 @@ import random
 import math
 import time
 
-# ---------------- MERGE SORT ----------------
+# MERGE SORT
 def merge_sort(arr):
     if len(arr) <= 1:
         return arr
@@ -153,7 +153,7 @@ def merge(left, right):
     return result
 
 
-# ---------------- LINEAR SEARCH ----------------
+# LINEAR SEARCH
 def linear_search(arr, key):
     for i in range(len(arr)):
         if arr[i] == key:
@@ -161,7 +161,7 @@ def linear_search(arr, key):
     return -1
 
 
-# ---------------- JUMP + LINEAR SEARCH ----------------
+# JUMP + LINEAR SEARCH
 def jump_linear_search(arr, key):
     n = len(arr)
     step = int(math.sqrt(n))
@@ -182,7 +182,7 @@ def jump_linear_search(arr, key):
     return -1
 
 
-# ---------------- MAIN PROGRAM ----------------
+# MAIN PROGRAM
 if __name__ == "__main__":
 
     SIZE = int(input("Enter number of elements to generate: "))
@@ -198,13 +198,13 @@ if __name__ == "__main__":
 
     key = int(input("\nEnter the element to search: "))
 
-    # -------- Linear Search Timing --------
+    # Linear Search Timing
     start = time.perf_counter()
     index_linear = linear_search(sorted_arr, key)
     end = time.perf_counter()
     time_linear = end - start
 
-    # -------- Jump + Linear Search Timing --------
+    # Jump + Linear Search Timing
     start = time.perf_counter()
     index_jump = jump_linear_search(sorted_arr, key)
     end = time.perf_counter()
@@ -226,3 +226,7 @@ if __name__ == "__main__":
         print("Jump + Linear Search: NOT FOUND")
 
     print(f"Jump + Linear Search Time: {time_jump:.8f} seconds")
+
+
+
+# jump linear 
