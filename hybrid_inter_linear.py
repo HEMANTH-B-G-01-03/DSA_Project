@@ -267,6 +267,162 @@
 
 
 
+# import random
+# import time
+# import matplotlib.pyplot as plt
+
+# # ---------------- MERGE SORT ----------------
+# def merge_sort(arr):
+#     if len(arr) <= 1:
+#         return arr
+
+#     mid = len(arr) // 2
+#     left = merge_sort(arr[:mid])
+#     right = merge_sort(arr[mid:])
+
+#     return merge(left, right)
+
+# def merge(left, right):
+#     result = []
+#     i = j = 0
+
+#     while i < len(left) and j < len(right):
+#         if left[i] < right[j]:
+#             result.append(left[i])
+#             i += 1
+#         else:
+#             result.append(right[j])
+#             j += 1
+
+#     result.extend(left[i:])
+#     result.extend(right[j:])
+#     return result
+
+
+# # ---------------- LINEAR SEARCH ----------------
+# def linear_search(arr, key):
+#     for i in range(len(arr)):
+#         if arr[i] == key:
+#             return i
+#     return -1
+
+
+# # ---------------- INTERPOLATION + LINEAR SEARCH ----------------
+# def interpolation_linear_search(arr, key):
+#     low, high = 0, len(arr) - 1
+
+#     while low <= high and key >= arr[low] and key <= arr[high]:
+#         if arr[low] == arr[high]:
+#             break
+
+#         pos = low + int(
+#             ((high - low) / (arr[high] - arr[low])) * (key - arr[low])
+#         )
+
+#         window = 5
+#         start = max(low, pos - window)
+#         end = min(high, pos + window)
+
+#         for i in range(start, end + 1):
+#             if arr[i] == key:
+#                 return i
+
+#         if key < arr[start]:
+#             high = start - 1
+#         else:
+#             low = end + 1
+
+#     return -1
+
+
+# # ---------------- MAIN PROGRAM ----------------
+# if __name__ == "__main__":
+
+#     sizes = [10, 50, 100, 1000, 5000, 10000]
+#     results = []
+
+#     for n in sizes:
+#         print("\n==============================================")
+#         print(f"Number of elements (n) = {n}")
+
+#         # Generate random numbers
+#         arr = [random.randint(1, 100000) for _ in range(n)]
+#         print(f"\nThe generated random {n} numbers are:")
+#         print(arr)
+
+#         # Sort using merge sort
+#         sorted_arr = merge_sort(arr)
+#         print("\nAfter Merge Sort, the sorted array elements are:")
+#         print(sorted_arr)
+
+#         # Ask element to search
+#         key = int(input("\nEnter the element to be searched from these numbers: "))
+
+#         # Linear search timing
+#         start = time.perf_counter()
+#         linear_search(sorted_arr, key)
+#         time_linear = time.perf_counter() - start
+
+#         # Hybrid search timing
+#         start = time.perf_counter()
+#         interpolation_linear_search(sorted_arr, key)
+#         time_hybrid = time.perf_counter() - start
+
+#         # Time difference
+#         time_difference = time_linear - time_hybrid
+
+#         # Print enhancement message
+#         if time_difference > 0:
+#             print(f"⏱️ Time has been enhanced by {time_difference:.8f} seconds using Interpolation + Linear Search")
+#         else:
+#             print(f"⚠️ Hybrid search took {-time_difference:.8f} seconds more than Linear Search")
+
+#         results.append([
+#             n,
+#             f"{time_linear:.8f}",
+#             f"{time_hybrid:.8f}",
+#             f"{time_difference:.8f}"
+#         ])
+
+#     # ---------------- PRINT TABLE IN TERMINAL ----------------
+#     print("\n\n============= COMPARISON TABLE =============")
+#     print("-" * 95)
+#     print(f"{'Total Elements':<20}{'Linear Search (s)':<25}"
+#           f"{'Interpolation + Linear (s)':<30}{'Time Enhanced (s)'}")
+#     print("-" * 95)
+
+#     for row in results:
+#         print(f"{row[0]:<20}{row[1]:<25}{row[2]:<30}{row[3]}")
+
+#     print("-" * 95)
+
+#     # ---------------- SAVE TABLE AS JPG ----------------
+#     fig, ax = plt.subplots()
+#     ax.axis('off')
+
+#     table = ax.table(
+#         cellText=results,
+#         colLabels=[
+#             "Total Elements",
+#             "Linear Search (s)",
+#             "Interpolation + Linear (s)",
+#             "Time Enhanced (s)"
+#         ],
+#         loc='center'
+#     )
+
+#     table.scale(1, 1.5)
+#     plt.title("Comparison of Linear Search vs Interpolation + Linear Search")
+
+#     plt.savefig("search_comparison_table.jpg", dpi=300, bbox_inches='tight')
+#     plt.show()
+
+#     print("\n✅ JPG file created: search_comparison_table.jpg")
+
+
+
+
+
 import random
 import time
 import matplotlib.pyplot as plt
@@ -307,26 +463,59 @@ def linear_search(arr, key):
     return -1
 
 
-# ---------------- INTERPOLATION + LINEAR SEARCH ----------------
-def interpolation_linear_search(arr, key):
+# ---------------- INTERPOLATION SEARCH ONLY ----------------
+def interpolation_search(arr, key):
     low, high = 0, len(arr) - 1
 
     while low <= high and key >= arr[low] and key <= arr[high]:
-        if arr[low] == arr[high]:
+        if arr[high] == arr[low]:
             break
 
         pos = low + int(
             ((high - low) / (arr[high] - arr[low])) * (key - arr[low])
         )
 
+        if arr[pos] == key:
+            return pos
+        elif arr[pos] < key:
+            low = pos + 1
+        else:
+            high = pos - 1
+
+    return -1
+
+
+# ---------------- INTERPOLATION + LINEAR SEARCH (HYBRID) ----------------
+def interpolation_linear_search(arr, key):
+    low, high = 0, len(arr) - 1
+
+    while low <= high and key >= arr[low] and key <= arr[high]:
+        if arr[high] == arr[low]:
+            break
+
+        # Interpolation formula
+        pos = low + int(
+            ((high - low) / (arr[high] - arr[low])) * (key - arr[low])
+        )
+
+        # Define small window around estimated position
         window = 5
         start = max(low, pos - window)
         end = min(high, pos + window)
 
-        for i in range(start, end + 1):
-            if arr[i] == key:
-                return i
+        # -------- Linear  Search inside window --------
+        l, r = start, end
+        while l <= r:
+            mid = (l + r) // 2
+            if arr[mid] == key:
+                return mid
+            elif arr[mid] < key:
+                l = mid + 1
+            else:
+                r = mid - 1
+        # --------------------------------------------
 
+        # Narrow the interpolation range
         if key < arr[start]:
             high = start - 1
         else:
@@ -335,86 +524,84 @@ def interpolation_linear_search(arr, key):
     return -1
 
 
+
 # ---------------- MAIN PROGRAM ----------------
 if __name__ == "__main__":
 
     sizes = [10, 50, 100, 1000, 5000, 10000]
+
     results = []
+    linear_times = []
+    interpolation_times = []
+    hybrid_times = []
 
     for n in sizes:
         print("\n==============================================")
         print(f"Number of elements (n) = {n}")
 
-        # Generate random numbers
         arr = [random.randint(1, 100000) for _ in range(n)]
-        print(f"\nThe generated random {n} numbers are:")
+        print(f"\nGenerated random {n} numbers:")
         print(arr)
 
-        # Sort using merge sort
         sorted_arr = merge_sort(arr)
-        print("\nAfter Merge Sort, the sorted array elements are:")
+        print("\nAfter Merge Sort:")
         print(sorted_arr)
 
-        # Ask element to search
-        key = int(input("\nEnter the element to be searched from these numbers: "))
+        key = int(input("\nEnter element to search: "))
 
-        # Linear search timing
+        # Linear Search
         start = time.perf_counter()
         linear_search(sorted_arr, key)
-        time_linear = time.perf_counter() - start
+        t_linear = (time.perf_counter() - start) * 1_000_000  # microseconds
 
-        # Hybrid search timing
+        # Interpolation Search
+        start = time.perf_counter()
+        interpolation_search(sorted_arr, key)
+        t_interp = (time.perf_counter() - start) * 1_000_000
+
+        # Hybrid Search
         start = time.perf_counter()
         interpolation_linear_search(sorted_arr, key)
-        time_hybrid = time.perf_counter() - start
+        t_hybrid = (time.perf_counter() - start) * 1_000_000
 
-        # Time difference
-        time_difference = time_linear - time_hybrid
-
-        # Print enhancement message
-        if time_difference > 0:
-            print(f"⏱️ Time has been enhanced by {time_difference:.8f} seconds using Interpolation + Linear Search")
-        else:
-            print(f"⚠️ Hybrid search took {-time_difference:.8f} seconds more than Linear Search")
+        linear_times.append(t_linear)
+        interpolation_times.append(t_interp)
+        hybrid_times.append(t_hybrid)
 
         results.append([
             n,
-            f"{time_linear:.8f}",
-            f"{time_hybrid:.8f}",
-            f"{time_difference:.8f}"
+            f"{t_linear:.3f}",
+            f"{t_interp:.3f}",
+            f"{t_hybrid:.3f}"
         ])
 
-    # ---------------- PRINT TABLE IN TERMINAL ----------------
-    print("\n\n============= COMPARISON TABLE =============")
-    print("-" * 95)
-    print(f"{'Total Elements':<20}{'Linear Search (s)':<25}"
-          f"{'Interpolation + Linear (s)':<30}{'Time Enhanced (s)'}")
-    print("-" * 95)
+    # ---------------- PRINT TABLE ----------------
+    print("\n\n================ COMPARISON TABLE (µs) ================")
+    print("-" * 90)
+    print(f"{'Total Elements':<20}{'Linear (µs)':<20}"
+          f"{'Interpolation (µs)':<25}{'Hybrid (µs)'}")
+    print("-" * 90)
 
-    for row in results:
-        print(f"{row[0]:<20}{row[1]:<25}{row[2]:<30}{row[3]}")
+    for r in results:
+        print(f"{r[0]:<20}{r[1]:<20}{r[2]:<25}{r[3]}")
 
-    print("-" * 95)
+    print("-" * 90)
 
-    # ---------------- SAVE TABLE AS JPG ----------------
-    fig, ax = plt.subplots()
-    ax.axis('off')
+    # ---------------- GRAPH ----------------
+    plt.figure()
 
-    table = ax.table(
-        cellText=results,
-        colLabels=[
-            "Total Elements",
-            "Linear Search (s)",
-            "Interpolation + Linear (s)",
-            "Time Enhanced (s)"
-        ],
-        loc='center'
-    )
+    plt.plot(sizes, linear_times, marker='o', label="Linear Search")
+    plt.plot(sizes, interpolation_times, marker='s', label="Interpolation Search")
+    plt.plot(sizes, hybrid_times, marker='^', label="Interpolation + Linear (Hybrid)")
 
-    table.scale(1, 1.5)
-    plt.title("Comparison of Linear Search vs Interpolation + Linear Search")
+    plt.xlabel("Dataset Size (n)")
+    plt.ylabel("Execution Time (Microseconds)")
+    plt.title("Performance Comparison of Search Algorithms")
 
-    plt.savefig("search_comparison_table.jpg", dpi=300, bbox_inches='tight')
+    plt.yscale("log")   # 🔥 THIS IS THE KEY LINE
+
+    plt.legend()
+    plt.grid(True, which="both")
+
+    plt.savefig("search_comparison_log_scale.jpg", dpi=300, bbox_inches="tight")
     plt.show()
-
-    print("\n✅ JPG file created: search_comparison_table.jpg")
